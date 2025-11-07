@@ -1,8 +1,20 @@
+import { endPoints } from "../../api/api-services";
+import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import "./Postulaciones.css";
 
 const Postulaciones = () => {
-
+  const [postulaciones, setPostulaciones] = useState([]);
+  function getPostulaciones() {
+    fetch(endPoints.postulaciones)
+      .then((response) => response.json())
+      .then((data) => setPostulaciones(data))
+      .catch((error) => console.error("Error fetching postulaciones:", error));
+  }
+  useEffect(() => {
+    getPostulaciones();
+  }
+  , []);
   return (
     <div>
       <Header />
@@ -33,21 +45,22 @@ const Postulaciones = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
+              {
+              postulaciones.map((postulacion) => ( <tr>
                 <td>
-                  <span className="postulacion-id">POST1234</span>
+                  <span className="postulacion-id">{postulacion.id}</span>
                 </td>
                 <td>
-                  <span className="usuario-id">CAND1234</span>
+                  <span className="usuario-id">{postulacion.id_postulante}</span>
                 </td>
                 <td>
-                  <span className="vacante-id">VAC1234</span>
+                  <span className="vacante-id">{postulacion.id_vacante}</span>
                 </td>
                 <td>
-                  <span>En Proceso</span>
+                  <span className="estado">{postulacion.estado.toUpperCase()}</span>
                 </td>
                 <td>
-                  <span className="observaciones-text">Sin observaciones</span>
+                  <span className="observaciones-text">{postulacion.observaciones}</span>
                 </td>
                 <td>
                   <div className="acciones">
@@ -95,7 +108,7 @@ const Postulaciones = () => {
                     </button>
                   </div>
                 </td>
-              </tr>
+              </tr>))}
             </tbody>
           </table>
         </div>

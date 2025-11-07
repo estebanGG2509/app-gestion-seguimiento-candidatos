@@ -1,7 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { consultarLocalStorage, limpiarLocalStorage } from "../helpers/funciones";
+import { alertaRedireccion } from "../helpers/alertas";
 import "./Header.css";
 
 const Header = () => {
+  let redireccion = useNavigate();
+  let usuario = consultarLocalStorage("usuario");
+  let iniciales = usuario.nombre.split(" ").map((palabra) => palabra[0]).join("");
+  console.log(iniciales);
+  function cerrarSesion() {
+    limpiarLocalStorage("usuario");
+    limpiarLocalStorage("token");
+    alertaRedireccion("cerrando sesion", "info", "/", redireccion);
+  }
   return (
     <header className="header">
       <div className="header-container">
@@ -40,7 +51,7 @@ const Header = () => {
         <nav className="header-nav">
           <ul className="nav-list">
             <li className="nav-item">
-              <Link to="" className="nav-link">
+              <Link to="/dashboard" className="nav-link">
                 <svg
                   className="nav-icon"
                   width="20"
@@ -60,7 +71,7 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="" className="nav-link">
+              <Link to="/vacantes" className="nav-link">
                 <svg
                   className="nav-icon"
                   width="20"
@@ -87,7 +98,7 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="" className="nav-link">
+              <Link to="/candidatos" className="nav-link">
                 <svg
                   className="nav-icon"
                   width="20"
@@ -114,7 +125,7 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="" className="nav-link">
+              <Link to="/postulaciones" className="nav-link">
                 <svg
                   className="nav-icon"
                   width="20"
@@ -153,11 +164,11 @@ const Header = () => {
         <div className="header-user">
           <div className="user-profile">
             <div className="user-avatar">
-              <p></p>
+              <p>{iniciales}</p>
             </div>
             <div className="user-info">
-              <span className="user-name">Usuario Admin</span>
-              <span className="user-role">Administrador</span>
+              <span className="user-name">{usuario.nombre}</span>
+              <span className="user-role">{usuario.rol}</span>
             </div>
             <svg
               className="dropdown-icon"
@@ -176,6 +187,7 @@ const Header = () => {
             </svg>
           </div>
         </div>
+        <button onClick={cerrarSesion} className="nav-link">Cerrar sesión</button>
       </div>
     </header>
   );
